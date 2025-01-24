@@ -81,10 +81,18 @@ jobs:
           CI_SERVER: ${{ secrets.CI_SERVER }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  Blossom-debug:
+    name: blossom debug
+    runs-on: blossom
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: test
+        run: pwd; ls -l; uname -a
+
   Upload-Test:
     name: Upload test results
     runs-on: niukuo
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && false
     steps:
       - name: Collect test result
         run: rm -rf results && mkdir results && cd results && curl -L ${{ github.event.inputs.test_results_url }} | tar -xz
