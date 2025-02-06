@@ -168,9 +168,12 @@ class LLaMAConfig(PretrainedConfig):
         residual_multiplier = getattr(hf_config, "residual_multiplier", 1.0)
         output_multiplier_scale = 1.0 / getattr(hf_config, "logits_scaling",
                                                 1.0)
-        if hf_config.model_type in ["mixtral", "arctic", "granitemoe"]:
+        if hf_config.model_type in ["mixtral", "arctic"]:
             # HF LLaMA-type models are implicitly using gated activation.
             # With our MoE implementation, we must make it explicit
+            hidden_act = "swiglu"
+            moe_normalization_mode = MoeConfig.ExpertScaleNormalizationMode.NONE
+        elif hf_config.model_type in ["granitemoe"]:
             hidden_act = "swiglu"
             moe_normalization_mode = MoeConfig.ExpertScaleNormalizationMode.RENORMALIZE
         else:
