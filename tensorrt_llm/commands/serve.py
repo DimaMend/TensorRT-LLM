@@ -39,6 +39,11 @@ from tensorrt_llm.serve import OpenAIServer
     help=
     "Maximum number of batched input tokens after padding is removed in each batch."
 )
+@click.option("--chunked_context",
+              is_flag=True,
+              default=False,
+              help="Enable chunked context (chunked prefill)."
+)
 @click.option(
     "--max_seq_len",
     type=int,
@@ -62,7 +67,8 @@ from tensorrt_llm.serve import OpenAIServer
 def main(model: str, tokenizer: str, host: str, port: int, backend: str,
          max_beam_width: int, max_batch_size: int, max_num_tokens: int,
          max_seq_len: int, tp_size: int, pp_size: int,
-         kv_cache_free_gpu_memory_fraction: float, trust_remote_code: bool):
+         kv_cache_free_gpu_memory_fraction: float,
+         trust_remote_code: bool, chunked_context: bool):
     """Running an OpenAI API compatible server
 
     MODEL: model name | HF checkpoint path | TensorRT engine path
@@ -83,6 +89,7 @@ def main(model: str, tokenizer: str, host: str, port: int, backend: str,
         trust_remote_code=trust_remote_code,
         build_config=build_config,
         kv_cache_config=kv_cache_config,
+        enable_chunked_prefill=chunked_context,
         backend=backend if backend == "pytorch" else None)
 
     llm = LLM(**llm_args.to_dict())
