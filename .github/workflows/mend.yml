@@ -30,7 +30,7 @@ jobs:
         echo Downloading Mend CLI
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend && chmod +x /usr/local/bin/mend
         echo run Mend scan
-        mend dep -u -s "*//AI//DeepSeek-V3"
+        mend dep -u -s "*//AI//TensorRT-LLM"
         
     - name: 'Upload .mend/logs folder'
       uses: actions/upload-artifact@v4
